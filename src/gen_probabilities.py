@@ -3,10 +3,10 @@ from collections import defaultdict
 
 # Creates json object of normalized bigram counts
 
-with open("unigrams.json", "r") as source:
+with open("../json/unigrams.json", "r") as source:
     unigrams = json.load(source)
 
-with open("bigrams.json", "r") as source:
+with open("../json/bigrams.json", "r") as source:
     bigrams = json.load(source)
 
 # Unigram: { preceding words and probabilities }
@@ -32,12 +32,12 @@ for (word, preceding_words_dict) in bigrams.items():
 
 # In this object, each key is a unigram and it's associated value is
 # a dict of words that precede it and their probability.
-with open("normalized_bigrams_prec.json", "w") as normalized_values_path:
+with open("../json/normalized_bigrams_prec.json", "w") as normalized_values_path:
     json_dict = json.dumps(bigrams_normalized_counts, indent=4)
     normalized_values_path.write(json_dict)
 
 # In this object, each key is a unigram and it's associated value is
 # a dict of words that follow it.
-with open("normalized_bigrams.json", "w") as normalized_values_path:
+with open("../json/normalized_bigrams.json", "w") as normalized_values_path:
     json_dict = json.dumps(bigrams_normalized_useful, indent=4)
     normalized_values_path.write(json_dict)

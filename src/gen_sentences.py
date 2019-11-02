@@ -1,13 +1,13 @@
 import json
 import random
 
-with open("unigrams.json", "r") as uni_source:
+with open("../json/unigrams.json", "r") as uni_source:
     uni_counts = json.load(uni_source)
 
 
 # Uses gen_senenteces_prec.json to build sentence backwards.
 def build_sentence_backwards():
-    with open("normalized_bigrams_prec.json", "r") as prec_source:
+    with open("../json/normalized_bigrams_prec.json", "r") as prec_source:
         bigram_prec_probs = json.load(prec_source)
 
     # Helper function for building sentence backward
@@ -47,7 +47,7 @@ def build_sentence_backwards():
 
 
 def build_sentence_forwards():
-    with open("normalized_bigrams.json", "r") as bigram_source:
+    with open("../json/normalized_bigrams.json", "r") as bigram_source:
         bigram_probs = json.load(bigram_source)
     sentence = "<s> "
     # Grab random starting word from <s>

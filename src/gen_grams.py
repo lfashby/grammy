@@ -13,7 +13,7 @@ bigram_dict = defaultdict(
         )
 )
 
-with open("refined_text.txt", "r") as text:
+with open("../refined_text.txt", "r") as text:
     for sentence in text:
         # Seperate into words, remove "\n"
         sentence = sentence.rstrip("\n")
@@ -32,10 +32,10 @@ with open("refined_text.txt", "r") as text:
                     bigram_dict[words[i]][words[i - 1]] = 1
 
 # Export dicts to json
-with open("unigrams.json", "w") as uni_file:
+with open("../json/unigrams.json", "w") as uni_file:
     json_dict = json.dumps(unigram_dict, indent=4)
     uni_file.write(json_dict)
 
-with open("bigrams.json", "w") as bi_file:
+with open("../json/bigrams.json", "w") as bi_file:
     json_dict = json.dumps(bigram_dict, indent=4)
     bi_file.write(json_dict)

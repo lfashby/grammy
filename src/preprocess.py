@@ -21,5 +21,5 @@ for sentence in sentences:
 
 stringify = [" ".join(string) for string in refined_sentences]
 
-with open("refined_text.txt", "w") as refined_text:
+with open("../refined_text.txt", "w") as refined_text:
     refined_text.writelines(stringify)
