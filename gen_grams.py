@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-# Creates json object of unigrams/bigrams in refined_text.txt
+# Creates json object of unigrams/bigrams and counts in refined_text.txt
 
 unigram_dict = {}
 bigram_dict = {}
