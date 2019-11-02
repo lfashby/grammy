@@ -31,7 +31,7 @@ with open("refined_text.txt", "r") as text:
                 else:
                     bigram_dict[words[i]][words[i - 1]] = 1
 
-# Export dict to json
+# Export dicts to json
 with open("unigrams.json", "w") as uni_file:
     json_dict = json.dumps(unigram_dict, indent=4)
     uni_file.write(json_dict)
