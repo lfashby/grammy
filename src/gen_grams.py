@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-# Creates json object of unigrams/bigrams and counts in refined_text.txt
+# Creates json object of unigrams/bigrams and counts in training_data.txt
 
 unigram_dict = {}
 bigram_dict = {}
@@ -13,7 +13,7 @@ bigram_dict = defaultdict(
         )
 )
 
-with open("../refined_text.txt", "r") as text:
+with open("../training_data.txt", "r") as text:
     for sentence in text:
         # Seperate into words, remove "\n"
         sentence = sentence.rstrip("\n")

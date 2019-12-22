@@ -1,4 +1,5 @@
 import json
+import math
 from collections import defaultdict
 
 # Creates json object of normalized bigram counts
@@ -9,15 +10,15 @@ with open("../json/unigrams.json", "r") as source:
 with open("../json/bigrams.json", "r") as source:
     bigrams = json.load(source)
 
-# Unigram: { preceding words and probabilities }
-bigrams_normalized_counts = defaultdict(
+# Word: { following word: probability }
+bigram_probs = defaultdict(
     lambda:
         defaultdict(
             lambda: 0
         )
 )
-# Unigram: { following words and probabilities }
-bigrams_normalized_useful = defaultdict(
+
+log_bigram_probs = defaultdict(
     lambda:
         defaultdict(
             lambda: 0
@@ -26,18 +27,20 @@ bigrams_normalized_useful = defaultdict(
 
 for (word, preceding_words_dict) in bigrams.items():
     for (preceding_word, count) in preceding_words_dict.items():
-        normalized_count = round(count/unigrams[preceding_word], 5)
-        bigrams_normalized_counts[word][preceding_word] = normalized_count
-        bigrams_normalized_useful[preceding_word][word] = normalized_count
-
-# In this object, each key is a unigram and it's associated value is
-# a dict of words that precede it and their probability.
-with open("../json/normalized_bigrams_prec.json", "w") as normalized_values_path:
-    json_dict = json.dumps(bigrams_normalized_counts, indent=4)
-    normalized_values_path.write(json_dict)
+        # How many digits to round to a fairly arbitrary decision
+        bigram_count = round(count/unigrams[preceding_word], 4)
+        log_bigram_count = math.log(round(count/unigrams[preceding_word], 4)) # not sure if I should be providing a base here
+        bigram_probs[preceding_word][word] = bigram_count
+        log_bigram_probs[preceding_word][word] = log_bigram_count
 
 # In this object, each key is a unigram and it's associated value is
 # a dict of words that follow it.
-with open("../json/normalized_bigrams.json", "w") as normalized_values_path:
-    json_dict = json.dumps(bigrams_normalized_useful, indent=4)
-    normalized_values_path.write(json_dict)
+with open("../json/bigram_probs.json", "w") as source:
+    json_dict = json.dumps(bigram_probs, indent=4)
+    source.write(json_dict)
+
+# In this object, each key is a unigram and it's associated value is
+# a dict of words that precede it and their probability.
+with open("../json/log_bigram_probs.json", "w") as log_source:
+    json_dict = json.dumps(log_bigram_probs, indent=4)
+    log_source.write(json_dict)
