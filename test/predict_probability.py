@@ -81,16 +81,17 @@ def wb(sentence):
                 probabilities.append(bigram_probs[prev][curr])
             else:
                 # We have no examples of curr following prev
-                if prev == "<s>":
-                    list_of_counts = 6111
-                else:
-                    list_of_counts = bigram_counts[prev].values()
-                count_of_bigrams_for_prev_word: sum(list_of_counts)
-                if prev == "<s>":
-                    
+                list_of_counts = bigram_counts[prev].values()
+                count_of_bigrams_for_prev_word = sum(list_of_counts)
                 number_of_word_types = len(list_of_counts)
-                probability = count_of_bigrams_for_prev_word / count_of_bigrams_for_prev_word + number_of_word_types
+                probability = math.log(round(
+                    (
+                        count_of_bigrams_for_prev_word / (count_of_bigrams_for_prev_word + number_of_word_types)
+                    ),
+                    4)
+                )
                 probabilities.append(probability)
+                print('did it', probability)
         # And what happens if prev is not in bigram_probs?
     print(probabilities)
     total_probability = math.exp(sum(probabilities))
