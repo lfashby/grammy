@@ -26,7 +26,9 @@ def calculate_prob_bigram_model(sentence):
                 probabilities.append(bigram_probs[prev][curr])
                 continue
             print(f"{curr} never follows {prev} in training data.")
+            continue
         print(f"{prev} does not occur in training data.")
+        probabilities.append(0)
     # Python 3.8 has a math.prod() function which would be useful here.
     total_probability = 1
     for prob in probabilities:
@@ -46,8 +48,10 @@ def calculate_prob_log_bigram_model(sentence):
             if curr in bigram_probs[prev]:
                 probabilities.append(bigram_probs[prev][curr])
                 continue
-        #     print(f"{curr} never follows {prev} in training data.")
-        # print(f"{prev} does not occur in training data.")
+        # Not sure what the recommended thing to do with logs is
+        # when we encounter an out of vocabulary word.
+        # Zero property of multiplication doesn't save us here.
+        # return 0
     total_probability = math.exp(sum(probabilities))
     return total_probability
         
