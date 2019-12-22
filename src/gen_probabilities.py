@@ -25,22 +25,24 @@ log_bigram_probs = defaultdict(
         )
 )
 
-for (word, preceding_words_dict) in bigrams.items():
-    for (preceding_word, count) in preceding_words_dict.items():
+# OLD:
+# { word: { preceding word: count }}
+for (word, following_words_dict) in bigrams.items():
+    for (following_word, count) in following_words_dict.items():
         # How many digits to round to a fairly arbitrary decision
-        bigram_count = round(count/unigrams[preceding_word], 4)
-        log_bigram_count = math.log(round(count/unigrams[preceding_word], 4)) # not sure if I should be providing a base here
-        bigram_probs[preceding_word][word] = bigram_count
-        log_bigram_probs[preceding_word][word] = log_bigram_count
+        # Divinding the number of times that bigram occurs by number of times the preceding word occurs.
+        # Same as dividing by the count of bigrams starting with preceding word.
+        bigram_count = round(count/unigrams[word], 4)
+        log_bigram_count = math.log(round(count/unigrams[word], 4)) # not sure if I should be providing a base here
+        bigram_probs[word][following_word] = bigram_count
+        log_bigram_probs[word][following_word] = log_bigram_count
 
-# In this object, each key is a unigram and it's associated value is
-# a dict of words that follow it.
+
 with open("../json/bigram_probs.json", "w") as source:
     json_dict = json.dumps(bigram_probs, indent=4)
     source.write(json_dict)
 
-# In this object, each key is a unigram and it's associated value is
-# a dict of words that precede it and their probability.
+
 with open("../json/log_bigram_probs.json", "w") as log_source:
     json_dict = json.dumps(log_bigram_probs, indent=4)
     log_source.write(json_dict)
