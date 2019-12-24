@@ -25,12 +25,11 @@ log_bigram_probs = defaultdict(
         )
 )
 
-# OLD:
-# { word: { preceding word: count }}
+
 for (word, following_words_dict) in bigrams.items():
     for (following_word, count) in following_words_dict.items():
         # How many digits to round to a fairly arbitrary decision
-        # Divinding the number of times that bigram occurs by number of times the preceding word occurs.
+        # Dividing the number of times the bigram occurs by number of times the preceding word occurs.
         # Same as dividing by the count of bigrams starting with preceding word.
         bigram_count = round(count/unigrams[word], 4)
         log_bigram_count = math.log(round(count/unigrams[word], 4)) # not sure if I should be providing a base here
