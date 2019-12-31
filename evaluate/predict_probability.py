@@ -2,9 +2,10 @@ import math
 import json
 
 easy_sentence = "<s> PART OF THE RITUAL OF SEX IS THE USE OF MARIJUANA </s>"
-
+# easy_sentence = "<s> MY FATHER HAD NONE </s>"
 # Iterate through the sentence, assiging a probabliity
 # that each word follows the next, add them together.
+
 # Just for fun.
 def calculate_prob_bigram_model(sentence):
     with open("../json/bigram_probs.json", "r") as bigram_source:
@@ -28,6 +29,30 @@ def calculate_prob_bigram_model(sentence):
     for prob in probabilities:
         total_probability = total_probability * prob
     return total_probability
+
+
+def calculate_prob_laplace(sentence):
+    with open("../json/log_bigram_probs.json", "r") as bigram_source:
+        log_bigram_probs = json.load(bigram_source)
+    with open("../json/unigrams.json", "r") as u_source:
+        uni_counts = json.load(u_source)
+    
+    probabilities = []
+    words = sentence.split(" ")
+    for i in range(1, len(words)):
+        prev = words[i - 1]
+        curr = words[i]
+        if prev in log_bigram_probs:
+            if curr in log_bigram_probs[prev]:
+                probabilities.append(log_bigram_probs[prev][curr])
+                continue
+            else:
+                new_prob = math.log(1 / (uni_counts[prev] + len(uni_counts)))
+                print("Running laplace smooting")
+                probabilities.append(new_prob)
+    total_probability = math.exp(sum(probabilities))
+    return total_probability
+
 
 
 def calculate_prob_log_bigram_model(sentence):
@@ -62,7 +87,7 @@ def wb(sentence):
         bigram_counts = json.load(bigram_count_source)
 
     probabilities = []
-    words = easy_sentence.split(' ')
+    words = sentence.split(' ')
     for i in range(1, len(words)):
         prev = words[i - 1]
         curr = words[i]
@@ -84,12 +109,18 @@ def wb(sentence):
                     4)
                 )
                 probabilities.append(probability)
+    print(probabilities)
     total_probability = math.exp(sum(probabilities))
     return total_probability
 
 
 wb_prob = wb(easy_sentence)
-print("Normal", normal)
-print("Log", log)
-print("WB", wb_prob)
-print(wb_prob > log)
+lp_prob = calculate_prob_laplace(easy_sentence)
+print("Normal EXPO", normal)
+print("Normal", "{:.14f}".format(normal))
+print("Log", "{:.14f}".format(log))
+print("WB EXPO", wb_prob)
+print("WB", "{:.14f}".format(wb_prob))
+print("LAPLACE EXPO", lp_prob)
+print("LAPLACE", "{:.14f}".format(lp_prob))
+print(wb_prob > lp_prob)
